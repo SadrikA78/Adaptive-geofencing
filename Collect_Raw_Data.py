@@ -29,5 +29,28 @@ def get_vk(latitude,longitude,radius):
     a=local_connect.getresponse().read()
     return a
 
-cc=get_vk(latitude1,longitude1,radius1)
+cc=get_vk(latitude1,longitude1)
 p = ast.literal_eval(cc)
+i=1
+data=list()
+if 'response' in p:
+   
+    while i < len(p['response']['items']):
+        if 'text' in p['response']['items'][i]:
+            a='https://vk.com/id'+str(int(p['response']['items'][i]['user_id']))+u' Время: '+str(datetime.datetime.fromtimestamp(int(p['response']['items'][i]['date'])).strftime('%d-%m-%Y %H:%M:%S'))+ ' ' + (p['response']['items'][i]['text']).decode('utf8')
+            data.append(i)
+            data.append('https://vk.com/id'+str(int(p['response']['items'][i]['user_id'])))
+            data.append(str(datetime.datetime.fromtimestamp(int(p['response']['items'][i]['date'])).strftime('%d-%m-%Y %H:%M:%S')))
+            #data.append((p['response']['items'][i]['text']).decode('utf8'))
+        else:
+            a='https://vk.com/id'+str(int(p['response']['items'][i]['user_id']))+u' Время: '+str(datetime.datetime.fromtimestamp(int(p['response']['items'][i]['date'])).strftime('%d-%m-%Y %H:%M:%S'))
+            data.append(i)
+            data.append('https://vk.com/id'+str(int(p['response']['items'][i]['user_id'])))
+            data.append(str(datetime.datetime.fromtimestamp(int(p['response']['items'][i]['date'])).strftime('%d-%m-%Y %H:%M:%S')))
+        #print data
+        with open('test.csv', 'wb') as fp:
+            f = csv.writer(fp, delimiter=';')
+            f.writerows(data)
+
+                
+        i=i+1
